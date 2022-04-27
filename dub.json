@@ -1,0 +1,18 @@
+{
+	"authors": [
+		"Rem"
+	],
+	"copyright": "Copyright © 2022, Rem",
+	"dependencies": {
+		"bindbc-glfw": "~>1.0.1",
+		"bindbc-opengl": "~>1.0.0",
+		"dplug:math": "~>12.5.2",
+		"gl3n": "~>1.4.1"
+	},
+	"versions": [
+		"GL_41"
+	],
+	"description": "A minimal D application.",
+	"license": "proprietary",
+	"name": "mined"
+}

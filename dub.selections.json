@@ -1,0 +1,11 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"bindbc-glfw": "1.0.1",
+		"bindbc-loader": "1.0.1",
+		"bindbc-opengl": "1.0.0",
+		"dplug": "12.5.3",
+		"gl3n": "1.4.1",
+		"intel-intrinsics": "1.9.3"
+	}
+}

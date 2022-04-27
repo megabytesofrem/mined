@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/mined
+mined.so
+mined.dylib
+mined.dll
+mined.a
+mined.lib
+mined-test-*
+*.exe
+*.o
+*.obj
+*.lst
