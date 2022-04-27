@@ -9,15 +9,16 @@ import engine.core.shader;
 import engine.core.window;
 import engine.renderer.block.blockrenderer;
 
-class GameWindow : Window
-{
+class GameWindow : Window {
     Camera cam;
 
     ShaderProgram program;
-    BlockRenderer renderer;
+    BlockRenderer block;
 
-    override void onWindowCreate()
-    {
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f; 
+
+    override void onWindowCreate() {
         import std.file : getcwd;
 
         // Load the shader
@@ -34,46 +35,74 @@ class GameWindow : Window
 
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
+        //glEnable(GL_CULL_FACE);
 
         // renderer stuff
-        cam = Camera(80.0f, 640, 480);
+        cam = Camera(80.0f, this.width, this.height);
+        cam.lookAt(cam.position, vec3(0, 1, 0), cam.up);
 
-        mat4 mvp = cam.projection * cam.view * mat4.identity();
-        program.setUniform("mvp", mvp);
+        block = new BlockRenderer();
+        block.translate(vec3(0, 0, 0));
 
-        renderer = new BlockRenderer();
-        renderer.initRenderer();
+        // mat4 mvp = cam.projection * cam.view * block.modelMatrix.scale(0.1f, 0.1f, 0.1f);
+        // program.setUniform("mvp", mvp.transposed);
     }
 
-    void onKeyboard()
-    {
+    void onKeyboard() {
+        import std.stdio;
+        const cameraSpeed = 2.0f * deltaTime;
+
         import core.stdc.stdlib : exit;
 
-        if (glfwGetKey(this.window, GLFW_KEY_ESCAPE))
-        {
+        if (glfwGetKey(this.window, GLFW_KEY_ESCAPE)) {
             onWindowClose();
             glfwTerminate();
             exit(0);
         }
+
+        // Camera movement
+        if (glfwGetKey(this.window, GLFW_KEY_W)) {
+            writeln("w");
+            cam.position += cam.front * cameraSpeed;
+        }
+
+        if (glfwGetKey(this.window, GLFW_KEY_S)) {
+            cam.position -= cam.front * cameraSpeed;
+        }
+
+        if (glfwGetKey(this.window, GLFW_KEY_A)) {
+            cam.position -= cross(cam.front, cam.up).normalized * cameraSpeed;
+        }
+
+        if (glfwGetKey(this.window, GLFW_KEY_D) == GLFW_PRESS) {
+            cam.position += cross(cam.front, cam.up).normalized * cameraSpeed;
+        }
     }
 
-    override void onWindowDraw()
-    {
+    override void onWindowDraw() {
+        // Calculate delta time
+        float current = glfwGetTime();
+        deltaTime = current - lastFrame;
+        lastFrame = current;
+
         onKeyboard();
 
         glClearColor(0.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // Camera
+        cam.lookAtCamera();
+        mat4 mvp = cam.projection * cam.view * block.modelMatrix;
+        program.setUniform("mvp", mvp.transposed);
+
         // renderer stuff
-        renderer.render(program);
+        block.render(program);
 
         glfwSwapBuffers(this.window);
         glfwWaitEvents();
     }
 
-    override void onWindowClose()
-    {
+    override void onWindowClose() {
         import std.stdio : writeln;
 
         writeln("Exiting mined..");

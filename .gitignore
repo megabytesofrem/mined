@@ -13,3 +13,6 @@ mined-test-*
 *.o
 *.obj
 *.lst
+
+# for now
+source/engine/renderer/block/blockrenderer.d

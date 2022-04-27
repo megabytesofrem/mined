@@ -5,37 +5,32 @@ import std.stdio;
 import bindbc.opengl;
 import bindbc.glfw;
 
-class Window
-{
+class Window {
+private:
     // The underlying native GLFW window
-    private GLFWwindow* _window;
-    private int _width, _height;
-
-    public @property int width()
-    {
+    GLFWwindow* _window;
+    int _width, _height;
+public:
+    @property int width() {
         return this._width;
     }
 
-    public @property int height()
-    {
+    @property int height() {
         return this._height;
     }
 
-    public @property GLFWwindow* window()
-    {
+    @property GLFWwindow* window() {
         return this._window;
     }
 
-    public void create(int width, int height, string title)
-    {
+    void create(int width, int height, string title) {
         import std.string : toStringz;
 
         this._width = width;
         this._height = height;
 
         const hasGlfw = loadGLFW();
-        if (hasGlfw != glfwSupport)
-        {
+        if (hasGlfw != glfwSupport) {
             writefln("GLFW failed to load!");
         }
 
@@ -47,8 +42,7 @@ class Window
         glfwWindowHint(GLFW_VERSION_MINOR, 3);
 
         _window = glfwCreateWindow(width, height, title.toStringz, null, null);
-        if (!_window)
-        {
+        if (!_window) {
             writefln("Failed to create window");
             glfwTerminate();
             return;
@@ -62,13 +56,11 @@ class Window
     }
 
     /**
-     Run the main event loop and call the event handler
+        Run the main event loop and call the event handler
      */
-    public void runEventLoop()
-    {
+    void runEventLoop() {
         bool closed = cast(bool) glfwWindowShouldClose(this.window);
-        while (!closed)
-        {
+        while (!closed) {
             onWindowDraw();
         }
 
@@ -79,9 +71,9 @@ class Window
     }
 
     /// Event stubs for onWindowCreate, onWindowDraw etc
-    public abstract void onWindowCreate();
+    abstract void onWindowCreate();
     /// ditto
-    public abstract void onWindowDraw();
+    abstract void onWindowDraw();
     /// ditto
-    public abstract void onWindowClose();
+    abstract void onWindowClose();
 }

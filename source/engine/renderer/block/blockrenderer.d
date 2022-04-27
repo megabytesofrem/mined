@@ -12,23 +12,30 @@ import bindbc.opengl;
 import std.stdio;
 import std.conv : to;
 
-class BlockRenderer : Renderer
-{
-    public BlockMesh mesh;
+class BlockRenderer : Renderer {
+private:
+    ShaderProgram _program;
+    Vertex[] _vertices;
+
+    GLuint vao, vbo;
+public:
+    BlockMesh mesh;
+    mat4 modelMatrix;
+
     private ShaderProgram _program;
     private Vertex[] _vertices;
 
     /// Shader program to use for rendering
-    public @property ShaderProgram program()
-    {
+    public @property ShaderProgram program() {
         return this._program;
     }
 
     // GL internals
     private GLuint vao, vbo;
 
-    public this()
-    {
+    public this() {
+        const offset = vec3(0, 0, 0);
+        this.modelMatrix = mat4.identity;
         this.mesh = new BlockMesh();
 
         // generate VAO
@@ -36,12 +43,12 @@ class BlockRenderer : Renderer
         glBindVertexArray(vao);
 
         // generate faces
-        mesh.buildFace(BlockFace.left, vec3(0.0, 0.0, 0.0));
-        mesh.buildFace(BlockFace.right, vec3(0.0, 0.0, 0.0));
-        mesh.buildFace(BlockFace.top, vec3(0.0, 0.0, 0.0));
-        mesh.buildFace(BlockFace.bottom, vec3(0.0, 0.0, 0.0));
-        mesh.buildFace(BlockFace.front, vec3(0.0, 0.0, 0.0));
-        mesh.buildFace(BlockFace.back, vec3(0.0, 0.0, 0.0));
+        mesh.buildFace(BlockFace.left, offset);
+        mesh.buildFace(BlockFace.right, offset);
+        mesh.buildFace(BlockFace.top, offset);
+        mesh.buildFace(BlockFace.bottom, offset);
+        mesh.buildFace(BlockFace.front, offset);
+        mesh.buildFace(BlockFace.back, offset);
 
         // debug
         writefln("faces: %('%s', %)", mesh.faces);
@@ -61,13 +68,15 @@ class BlockRenderer : Renderer
         glEnableVertexAttribArray(0);
     }
 
-    public override void initRenderer()
-    {
+    public void translate(vec3 position) {
+        this.modelMatrix = mat4.translation(position);
+    }
+
+    public override void initRenderer() {
 
     }
 
-    public override void render(ShaderProgram program)
-    {
+    public override void render(ShaderProgram program) {
         writefln("program: %d", program.program);
 
         program.use;

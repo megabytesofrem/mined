@@ -2,10 +2,9 @@ import std.stdio;
 
 import game;
 
-void main()
-{
+void main() {
 	GameWindow window = new GameWindow();
-	
-	window.create(640, 480, "Minecraft Clone");
+
+	window.create(800, 600, "Minecraft Clone");
 	window.runEventLoop;
 }

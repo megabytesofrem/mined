@@ -8,18 +8,15 @@ import std.string : toStringz, fromStringz;
 import std.file : readText;
 
 // Write out shader compilation to stdout for debugging
-void writeInfoLog(uint shaderType, uint shaderId)
-{
+void writeInfoLog(uint shaderType, uint shaderId) {
     int len;
     glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &len);
 
-    if (len > 0)
-    {
+    if (len > 0) {
         auto buf = new char[len];
         glGetShaderInfoLog(shaderId, len, null, buf.ptr);
 
-        final switch (shaderType)
-        {
+        final switch (shaderType) {
         case GL_VERTEX_SHADER:
             writefln("Compile failed for vertex shader: %s", buf);
             break;
@@ -30,24 +27,22 @@ void writeInfoLog(uint shaderType, uint shaderId)
     }
 }
 
-struct ShaderProgram
-{
-    private GLint _program;
+struct ShaderProgram {
+private:
+    GLint _program;
 
     // Vertex and fragment shaders
-    private GLuint _vertShader;
-    private GLuint _fragShader;
-
-    public @property int program()
-    {
+    GLuint _vertShader;
+    GLuint _fragShader;
+public:
+    @property GLint program() {
         return this._program;
     }
 
     /**
-     Link the vertex and fragment shader, producing a shader program
+        Link the vertex and fragment shader, producing a shader program
      */
-    public void link(VertexShader vertShader, FragmentShader fragShader)
-    {
+    void link(VertexShader vertShader, FragmentShader fragShader) {
         this._vertShader = vertShader.compiledShader;
         this._fragShader = fragShader.compiledShader;
 
@@ -62,26 +57,22 @@ struct ShaderProgram
         glDeleteShader(_fragShader);
     }
 
-    public void use()
-    {
+    void use() {
         glUseProgram(program);
     }
 
     // Uniforms
-    public void setUniform(string uniform, int value)
-    {
+    void setUniform(string uniform, int value) {
         const location = glGetUniformLocation(this.program, uniform.toStringz);
         glUniform1i(location, value);
     }
 
-    public void setUniform(string uniform, float value)
-    {
+    void setUniform(string uniform, float value) {
         const location = glGetUniformLocation(this.program, uniform.toStringz);
         glUniform1f(location, value);
     }
 
-    public void setUniform(string uniform, mat4 matrix)
-    {
+    void setUniform(string uniform, mat4 matrix) {
         const location = glGetUniformLocation(this.program, uniform.toStringz);
 
         // https://gl3n.dpldocs.info/v1.4.1/gl3n.linalg.Matrix.value_ptr.html
@@ -89,17 +80,15 @@ struct ShaderProgram
     }
 }
 
-struct VertexShader
-{
-    private GLuint _compiledShader;
-
-    public @property uint compiledShader()
-    {
+struct VertexShader {
+private:
+    GLuint _compiledShader;
+public:
+    @property GLuint compiledShader() {
         return this._compiledShader;
     }
 
-    public VertexShader compile(string path)
-    {
+    VertexShader compile(string path) {
         const(char*) source = readText(path).toStringz;
         int success;
 
@@ -116,17 +105,15 @@ struct VertexShader
     }
 }
 
-struct FragmentShader
-{
-    private GLuint _compiledShader;
-
-    public @property uint compiledShader()
-    {
+struct FragmentShader {
+private:
+    GLuint _compiledShader;
+public:
+    @property GLuint compiledShader() {
         return this._compiledShader;
     }
 
-    public FragmentShader compile(string path)
-    {
+    FragmentShader compile(string path) {
         const(char*) source = readText(path).toStringz;
         int success;
 

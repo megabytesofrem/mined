@@ -3,35 +3,30 @@ module engine.renderer.vertexbuilder;
 import engine.renderer.vertex;
 
 /**
- Helper class to build a mesh from connected vertices
+    Helper class to build a mesh from connected vertices
  */
-class VertexBuilder
-{
+class VertexBuilder {
     import std.conv : to;
 
-    private Vertex[] _vertices;
-
+private:
+    Vertex[] _vertices;
+public:
     /// Array of vertices
-    public @property Vertex[] vertices()
-    {
+    @property Vertex[] vertices() {
         return this._vertices;
     }
 
-    public void push(Vertex v)
-    {
+    void push(Vertex v) {
         this._vertices ~= v;
     }
 
-    public void push(Vertex[] verts)
-    {
-        foreach (Vertex v; verts)
-        {
+    void push(Vertex[] verts) {
+        foreach (Vertex v; verts) {
             this.push(v);
         }
     }
 
-    public Vertex pop()
-    {
+    Vertex pop() {
         auto backVertex = this._vertices[$ - 1];
         this._vertices.length--;
 
