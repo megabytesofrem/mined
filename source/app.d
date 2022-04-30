@@ -2,7 +2,8 @@ import std.stdio;
 
 import game;
 
-void main() {
+void main()
+{
 	GameWindow window = new GameWindow();
 
 	window.create(800, 600, "Minecraft Clone");

@@ -1,6 +1,6 @@
-module engine.core.renderer;
+module mined.engine.renderer;
 
-import engine.core.shader;
+import mined.engine.shader;
 import bindbc.opengl;
 
 class Renderer {
